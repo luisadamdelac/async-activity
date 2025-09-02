@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Viewer with Fetch API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        button {
+            display: block;
+            margin: 0 auto 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #dogImage {
+            display: block;
+            max-width: 100%;
+            max-height: 400px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #status {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-style: italic;
+        }
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #333;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Dog Viewer with Fetch API</h1>
+        <p>Click the button to fetch and display a random dog image using the Fetch API</p>
+        
+        <button id="fetchDogBtn">
+            <span class="loading" id="loadingIcon" style="display: none;"></span>
+            Get Random Dog
+        </button>
+        
+        <div>
+            <img id="dogImage" src="" alt="Random dog image will appear here">
+        </div>
+        
+        <div id="status">Ready to fetch a dog image</div>
+    </div>
+
+    <script>
+        // DOM elements
+        const fetchDogBtn = document.getElementById('fetchDogBtn');
+        const dogImage = document.getElementById('dogImage');
+        const statusDiv = document.getElementById('status');
+        const loadingIcon = document.getElementById('loadingIcon');
+
+        // Event listener for the button
+        fetchDogBtn.addEventListener('click', fetchRandomDog);
+
+        function fetchRandomDog() {
+            dogImage.style.display = 'none';
+            statusDiv.textContent = 'Fetching dog image...';
+            fetchDogBtn.disabled = true;
+            loadingIcon.style.display = 'inline-block';
+            
+            fetch('https://dog.ceo/api/breeds/image/random')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        dogImage.src = data.message;
+                        dogImage.alt = "Random dog image";
+                        dogImage.style.display = 'block';
+                        statusDiv.textContent = 'Here\'s a random dog for you!';
+                    } else {
+                        throw new Error('API returned an error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.textContent = 'Error: ' + error.message;
+                    dogImage.style.display = 'none';
+                })
+                .finally(() => {
+                    fetchDogBtn.disabled = false;
+                    loadingIcon.style.display = 'none';
+                });
+        }
+
+        window.addEventListener('load', fetchRandomDog);
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Viewer with Fetch API</title>
+      <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+    <div>
+        <h1>Dog Viewer with Fetch API</h1>
+        <p>Click the button to fetch and display a random dog image using the Fetch API</p>
+        
+        <button id="fetchDogBtn">
+            <span class="loading" id="loadingIcon" style="display: none;"></span>
+            Get Random Dog
+        </button>
+        
+        <div>
+            <img id="dogImage" src="" alt="Random dog image will appear here">
+        </div>
+        
+        <div id="status">Ready to fetch a dog image</div>
+    </div>
+    <script src=index.js></script>
+</body>
+</html>
